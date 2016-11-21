@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>WebView兼容4.0文件上传 | 魏鹏</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/app.css">
+  <!-- <link rel='stylesheet' href='http://fonts.useso.com/css?family=Source+Code+Pro'> -->
+  
+</head>
+
+<body>
+  <nav class="app-nav">
+  
+    
+      <a href="/.">home</a>
+    
+  
+    
+      <a href="/archives">archive</a>
+    
+  
+    
+      <a href="/atom.xml">rss</a>
+    
+  
+</nav>
+
+  <main class="post">
+  <article>
+  <h1 class="article-title">
+    <a href="/2016/11/21/WebView兼容4-0文件上传/">WebView兼容4.0文件上传</a>
+  </h1>
+
+  <section class="article-meta">
+    <p class="article-date">November 21 2016</p>
+  </section>
+
+  <section class="article-entry">
+    <h4 id="兼容5-0以下WebView文件上传"><a href="#兼容5-0以下WebView文件上传" class="headerlink" title="兼容5.0以下WebView文件上传"></a>兼容5.0以下WebView文件上传</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"> WebChromeClient chromeClient = <span class="keyword">new</span> WebChromeClient()&#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceivedTitle</span><span class="params">(WebView view, String title)</span> </span>&#123;</div><div class="line">                <span class="keyword">super</span>.onReceivedTitle(view, title);</div><div class="line">                mTitle.setText(title);</div><div class="line">                setActionBarTitle(title);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">//扩展浏览器上传文件</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(ValueCallback&lt;Uri&gt; uploadMsg)</span> </span>&#123;</div><div class="line">                Log.d(<span class="string">"1"</span>, <span class="string">"openFileChoose(ValueCallback&lt;Uri&gt; uploadMsg)"</span>);</div><div class="line">                openFileChooserImpl(uploadMsg);</div><div class="line">            &#125;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">( ValueCallback uploadMsg, String acceptType )</span> </span>&#123;</div><div class="line">                Log.d(<span class="string">"1"</span>, <span class="string">"openFileChoose( ValueCallback uploadMsg, String acceptType )"</span>);</div><div class="line">                openFileChooserImpl(uploadMsg);</div><div class="line">            &#125;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture)</span></span>&#123;</div><div class="line">                Log.d(<span class="string">"1"</span>, <span class="string">"openFileChoose(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture)"</span>);</div><div class="line">                openFileChooserImpl(uploadMsg);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// For Android &gt; 5.0</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onShowFileChooser</span> <span class="params">(WebView webView, ValueCallback&lt;Uri[]&gt; uploadMsg, WebChromeClient.FileChooserParams fileChooserParams)</span> </span>&#123;</div><div class="line"></div><div class="line">                openFileChooserImplForAndroid5(uploadMsg);</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">openFileChooserImplForAndroid5</span><span class="params">(ValueCallback&lt;Uri[]&gt; uploadMsg)</span> </span>&#123;</div><div class="line">       mUploadMessageForAndroid5 = uploadMsg;</div><div class="line">       Intent contentSelectionIntent = <span class="keyword">new</span> Intent(Intent.ACTION_GET_CONTENT);</div><div class="line">       contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);</div><div class="line">       contentSelectionIntent.setType(<span class="string">"image/*"</span>);</div><div class="line"></div><div class="line">       Intent chooserIntent = <span class="keyword">new</span> Intent(Intent.ACTION_CHOOSER);</div><div class="line">       chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);</div><div class="line">       chooserIntent.putExtra(Intent.EXTRA_TITLE, <span class="string">"Image Chooser"</span>);</div><div class="line"></div><div class="line">       startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE_FOR_ANDROID_5);</div><div class="line">   &#125;</div><div class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">openFileChooserImpl</span><span class="params">(ValueCallback&lt;Uri&gt; uploadMsg)</span> </span>&#123;</div><div class="line">       mUploadMessage = uploadMsg;</div><div class="line">       Intent i = <span class="keyword">new</span> Intent(Intent.ACTION_GET_CONTENT);</div><div class="line">       i.addCategory(Intent.CATEGORY_OPENABLE);</div><div class="line">       i.setType(<span class="string">"image/*"</span>);</div><div class="line">       startActivityForResult(Intent.createChooser(i, <span class="string">"File Chooser"</span>), FILECHOOSER_RESULTCODE);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>选择完图片回调方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode,Intent intent)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (requestCode == FILECHOOSER_RESULTCODE) &#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == mUploadMessage)</div><div class="line">                <span class="keyword">return</span>;</div><div class="line">            Uri result = intent == <span class="keyword">null</span> || resultCode != RESULT_OK ? <span class="keyword">null</span>: intent.getData();</div><div class="line">            mUploadMessage.onReceiveValue(result);</div><div class="line">            mUploadMessage = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (requestCode == FILECHOOSER_RESULTCODE_FOR_ANDROID_5)&#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == mUploadMessageForAndroid5)</div><div class="line">                <span class="keyword">return</span>;</div><div class="line">            Uri result = (intent == <span class="keyword">null</span> || resultCode != RESULT_OK) ? <span class="keyword">null</span>: intent.getData();</div><div class="line">            <span class="keyword">if</span> (result != <span class="keyword">null</span>) &#123;</div><div class="line">                mUploadMessageForAndroid5.onReceiveValue(<span class="keyword">new</span> Uri[]&#123;result&#125;);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                mUploadMessageForAndroid5.onReceiveValue(<span class="keyword">new</span> Uri[]&#123;&#125;);</div><div class="line">            &#125;</div><div class="line">            mUploadMessageForAndroid5 = <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>全局变量声明保存webview的回调参数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> ValueCallback&lt;Uri&gt; mUploadMessage;</div><div class="line"><span class="keyword">public</span> ValueCallback&lt;Uri[]&gt; mUploadMessageForAndroid5;</div><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> FILECHOOSER_RESULTCODE = <span class="number">1</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = <span class="number">2</span>;</div></pre></td></tr></table></figure></p>
+<p>添加混淆<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">-keepclassmembers <span class="class"><span class="keyword">class</span> * <span class="keyword">extends</span> <span class="title">android</span>.<span class="title">webkit</span>.<span class="title">WebChromeClient</span></span>&#123;</div><div class="line">   		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(...)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+  </section>
+</article>
+
+  <div class="sharing grid">
+  <section class="profile grid-item grid">
+    <img class="avatar" src="http://7xrcp8.com1.z0.glb.clouddn.com/avatar.png" alt="avatar" />
+    <div class="grid-item">
+      <p class="title"> 魏鹏 </p>
+      <p class="subtitle"> You Are The JavaScript In My HTML </p>
+    <div>
+  </section>
+
+  <section class="share-btns">
+    <!-- <p> share it if you like it~ </p> -->
+    <a
+  class="twitter-share-button"
+  data-size="large"
+  data-via="DrakeLeung"
+  href="https://twitter.com/intent/tweet?text= id="兼容5-0以下WebView文"
+>
+  Tweet
+</a>
+
+<script>
+  window.twttr = (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+  if (d.getElementById(id)) return t;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://platform.twitter.com/widgets.js";
+  js.async = true;
+  fjs.parentNode.insertBefore(js, fjs);
+
+  t._e = [];
+  t.ready = function(f) {
+    t._e.push(f);
+  };
+
+  return t;
+}(document, "script", "twitter-wjs"));
+</script>
+
+  </section>
+</div>
+
+
+  
+    
+<section class="article-comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+<script>
+  var disqus_shortname = 'drakeleung';
+  
+  var disqus_url = 'http://yoursite.com/2016/11/21/WebView兼容4-0文件上传/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+  
+</main>
+
+</body>
+</html>

@@ -62,6 +62,65 @@
 <p>6.删除远程分支</p>
 </blockquote>
 <pre><code>git push origin --delete &lt;branch&gt;
+</code></pre><blockquote>
+<p>7.初始化仓库</p>
+</blockquote>
+<pre><code>git init
+</code></pre><blockquote>
+<p>8.拉取远程仓库到本地</p>
+</blockquote>
+<pre><code>git clone [url]
+</code></pre><blockquote>
+<p>9.关联远程仓库</p>
+</blockquote>
+<pre><code>git remote add [remote-name] [url]
+</code></pre><blockquote>
+<p>10.添加所有文件</p>
+</blockquote>
+<pre><code>git add .  
+</code></pre><blockquote>
+<p>11.提交到本地仓库和add配合使用</p>
+</blockquote>
+<pre><code>git commit -m &quot;注释&quot;
+</code></pre><blockquote>
+<p>12.撤销最近的一个提交</p>
+</blockquote>
+<pre><code>git revert HEAD
+</code></pre><blockquote>
+<p>13.将本地代码提交到远程仓库</p>
+</blockquote>
+<pre><code>git push [remote-name] [loca-branch]:[remote-branch]
+</code></pre><blockquote>
+<p>14.更新远程仓库</p>
+</blockquote>
+<pre><code>git pull [remote-name] [loca-branch]:[remote-branch]
+</code></pre><blockquote>
+<p>15.合并分支</p>
+</blockquote>
+<pre><code>git merge [remote-name]/[branch]
+</code></pre><blockquote>
+<p>16.查看当前本地仓库的所有分支</p>
+</blockquote>
+<pre><code>git branch
+</code></pre><hr>
+<h2 id="—"><a href="#—" class="headerlink" title="—"></a>—</h2><blockquote>
+<p>17.创建一个新分支</p>
+</blockquote>
+<pre><code>git branch (branch name)
+</code></pre><blockquote>
+<p>18.删除一个分支</p>
+</blockquote>
+<pre><code>git branch -d(branch-name)
+</code></pre><blockquote>
+<p>19.删除远程仓库的某个分支</p>
+</blockquote>
+<pre><code>git push (remote-name) :(remote-branch)
+</code></pre><p>20.切换到某一个分支</p>
+<pre><code>git checkout [branch-name]
+</code></pre><p>21.创建并切换分支</p>
+<pre><code>git checkout -b [branch-name]
+</code></pre><p>22.查看操作日志</p>
+<pre><code>git log
 </code></pre>
   </section>
 </article>
